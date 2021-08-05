@@ -56,7 +56,7 @@ void output() {
   }
 }
 
-const std::unordered_set<std::string> useful_edge_tags = {
+const std::unordered_set<std::string> edge_tags = {
   "teacherOf",
   "worksFor",
   "memberOf",
@@ -71,7 +71,7 @@ const std::unordered_set<std::string> useful_edge_tags = {
   "headOf"
 };
 
-const std::unordered_set<std::string> useless_edge_tags = {
+const std::unordered_set<std::string> property_tags = {
   "emailAddress",
   "name",
   "telephone",
@@ -147,7 +147,7 @@ void process_owl(const std::filesystem::directory_entry& entry) {
         }
       }();
       // single line edge
-      if (useful_edge_tags.count(tag_name)) {
+      if (edge_tags.count(tag_name)) {
         if (line.find(":resource") == std::string::npos) {
           std::getline(in, line);
         }
@@ -156,8 +156,12 @@ void process_owl(const std::filesystem::directory_entry& entry) {
         auto desc = line.substr(a, b - a);
         auto id = get_vtx_id(desc);
         add_edge(vtx_id, id, get_edge_type_id(tag_name));
-      } else if (useless_edge_tags.count(tag_name)) {
-        continue;
+      } else if (property_tags.count(tag_name)) {
+        auto a = line.find('>', s) + 1;
+        auto b = line.find('<', a);
+        auto desc = line.substr(a, b - a);
+        auto id = get_vtx_id(desc);
+        add_edge(vtx_id, id, get_edge_type_id(tag_name));
       } else {
         std::cout << "Unknown tag name: " << tag_name << std::endl;
       }
