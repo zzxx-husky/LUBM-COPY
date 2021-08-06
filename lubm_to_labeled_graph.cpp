@@ -8,10 +8,13 @@
 
 std::string dir;
 std::vector<size_t> vtx_labels;
-std::vector<std::tuple<size_t, size_t, size_t>> edges;
+// std::vector<std::tuple<size_t, size_t, size_t>> edges;
 std::unordered_map<std::string, size_t> desc2id;
 std::unordered_map<std::string, size_t> vtype2id;
 std::unordered_map<std::string, size_t> etype2id;
+
+size_t num_edges = 0;
+std::ofstream edges_out;
 
 void output() {
   {
@@ -39,12 +42,14 @@ void output() {
     std::cout << "Total number of edge types is " << etype2id.size() << std::endl;
   }
   {
-    std::ofstream out(dir + "edges.lumb.txt");
-    for (auto& e : edges) {
-      out << std::get<0>(e) << ' ' << std::get<1>(e) << ' ' << std::get<2>(e) << std::endl;
-    }
-    out.close();
-    std::cout << "Total number of edges is " << edges.size() << std::endl;
+    // std::ofstream out(dir + "edges.lumb.txt");
+    // for (auto& e : edges) {
+    //   out << std::get<0>(e) << ' ' << std::get<1>(e) << ' ' << std::get<2>(e) << std::endl;
+    // }
+    // out.close();
+    // std::cout << "Total number of edges is " << edges.size() << std::endl;
+    edges_out.close();
+    std::cout << "Total number of edges is " << num_edges << std::endl;
   }
   {
     std::ofstream out(dir + "vertex_labels.lumb.txt");
@@ -100,7 +105,9 @@ size_t get_edge_type_id(const std::string& type) {
 }
 
 void add_edge(size_t src_id, size_t dst_id, size_t label) {
-  edges.emplace_back(src_id, dst_id, label);
+  // edges.emplace_back(src_id, dst_id, label);
+  edges_out << src_id << ' ' << dst_id << ' ' << label << std::endl;
+  ++num_edges;
 }
 
 void set_vtx_label(size_t vtx_id, size_t label) {
@@ -161,6 +168,8 @@ void process_owl(const std::filesystem::directory_entry& entry) {
         auto b = line.find('<', a);
         auto desc = line.substr(a, b - a);
         auto id = get_vtx_id(desc);
+        // each property has a unique vertex label
+        set_vtx_label(id, get_vtx_type_id(desc));
         add_edge(vtx_id, id, get_edge_type_id(tag_name));
       } else {
         std::cout << "Unknown tag name: " << tag_name << std::endl;
@@ -172,6 +181,7 @@ void process_owl(const std::filesystem::directory_entry& entry) {
 
 int main(int argc, char** argv) {
   dir = argv[1];
+  edges_out.open(dir + "edges.lumb.txt", std::ofstream::out);
   for (const auto& e : std::filesystem::directory_iterator(dir)) {
     if (e.path().filename().string().find(".owl") != std::string::npos) {
       process_owl(e);
