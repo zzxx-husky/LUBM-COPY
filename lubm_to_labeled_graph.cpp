@@ -135,7 +135,7 @@ std::unordered_map<std::variant<Desc, std::string>, size_t> desc2id;
 
 void output() {
   {
-    // std::ofstream out(dir + "descriptions_to_ids.lumb.txt");
+    // std::ofstream out(dir + "descriptions_to_ids.lubm.txt");
     for (auto& d2i : desc2id) {
       if (d2i.first.index()) {
         desc2ids_out << std::get<std::string>(d2i.first);
@@ -148,7 +148,7 @@ void output() {
     std::cout << "Total number of vertices is " << desc2id.size() << std::endl;
   }
   {
-    std::ofstream out(dir + "vertex_types_to_ids.lumb.txt");
+    std::ofstream out(dir + "vertex_types_to_ids.lubm.txt");
     for (auto& v2i : vtype2id) {
       out << v2i.first << ' ' << v2i.second << std::endl;
     }
@@ -156,7 +156,7 @@ void output() {
     std::cout << "Total number of vertex types is " << vtype2id.size() << std::endl;
   }
   {
-    std::ofstream out(dir + "edge_types_to_ids.lumb.txt");
+    std::ofstream out(dir + "edge_types_to_ids.lubm.txt");
     for (auto& e2i : etype2id) {
       out << e2i.first << ' ' << e2i.second << std::endl;
     }
@@ -164,7 +164,7 @@ void output() {
     std::cout << "Total number of edge types is " << etype2id.size() << std::endl;
   }
   {
-    // std::ofstream out(dir + "edges.lumb.txt");
+    // std::ofstream out(dir + "edges.lubm.txt");
     // for (auto& e : edges) {
     //   out << std::get<0>(e) << ' ' << std::get<1>(e) << ' ' << std::get<2>(e) << std::endl;
     // }
@@ -174,7 +174,7 @@ void output() {
     std::cout << "Total number of edges is " << num_edges << std::endl;
   }
   {
-    std::ofstream out(dir + "vertex_labels.lumb.txt");
+    std::ofstream out(dir + "vertex_labels.lubm.txt");
     for (int i = 0, n = vtx_labels.size(); i < n; i++) {
       out << i << ' ' << vtx_labels[i] << std::endl;
     }
@@ -352,8 +352,8 @@ int main(int argc, char** argv) {
   // test(); return 0;
 
   dir = argv[1];
-  edges_out.open(dir + "edges.lumb.txt", std::ofstream::out);
-  desc2ids_out.open(dir + "descriptions_to_ids.lumb.txt", std::ofstream::out);
+  edges_out.open(dir + "edges.lubm.txt", std::ofstream::out);
+  desc2ids_out.open(dir + "descriptions_to_ids.lubm.txt", std::ofstream::out);
 
   for (const auto& e : std::filesystem::directory_iterator(dir)) {
     if (e.path().filename().string().find(".owl") != std::string::npos) {

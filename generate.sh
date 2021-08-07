@@ -21,3 +21,7 @@ fi
 g++ lubm_to_labeled_graph.cpp -std=c++17 -O3 -o LUBM2LabeledGraph -lstdc++fs
 
 ./LUBM2LabeledGraph ${dir}
+
+g++ lubm_queries.cpp -O3 -o LUBMQueries
+
+./LUBMQueries ${dir}
